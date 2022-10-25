@@ -4,12 +4,12 @@ package Redis
 import (
 	"context"
 	"fmt"
-	"gin/pkg/setting"
 	"log"
-	"os"
 	"strconv"
 	"sync"
 	"time"
+
+	u "gin/pkg/util"
 
 	redis "github.com/go-redis/redis/v8"
 )
@@ -26,33 +26,28 @@ var once sync.Once
 // Redis 全局 Redis，使用 db 1
 var RedisCli *RedisClient
 
-func init() {
+// Redis const
+
+const (
+	USER_STATISTC   string = "userStatistic:"
+	NOTIFI_STATISTC string = "notifStatistic:"
+)
+
+func SetupRedis() {
 	var (
-		address, host, port string
-		db                  int
+		address, host, port, password string
+		db                            int
 	)
 
-	if lambdaTaskRoot := os.Getenv("LAMBDA_TASK_ROOT"); lambdaTaskRoot != "" {
-
-		host = os.Getenv("REDIS_HOST")
-		port = os.Getenv("REDIS_PORT")
-		db, _ = strconv.Atoi(os.Getenv("REDIS_DATABASE"))
-
-	} else {
-		sec, err := setting.Cfg.GetSection("database")
-		if err != nil {
-			log.Fatal(2, "Fail to get section 'database': %v", err)
-		}
-
-		host = sec.Key("REDIS_HOST").String()
-		port = sec.Key("REDIS_PORT").String()
-		db, _ = strconv.Atoi(sec.Key("REDIS_DATABASE").String())
-	}
+	host = u.GetEnv("REDIS_HOST")
+	port = u.GetEnv("REDIS_PORT")
+	password = u.GetEnv("REDIS_PASSWORD")
+	db, _ = strconv.Atoi(u.GetEnv("REDIS_DATABASE"))
 
 	address = fmt.Sprintf("%v:%v", host, port)
-	fmt.Println("redis address:", address)
+	// fmt.Println("redis address:", address)
 
-	ConnectRedis(address, "", "", db)
+	ConnectRedis(address, "", password, db)
 }
 
 // ConnectRedis 连接 redis 数据库，设置全局的 Redis 对象
@@ -96,7 +91,6 @@ func (rds RedisClient) Ping() error {
 func (rds RedisClient) Set(key string, value interface{}, expiration time.Duration) bool {
 	if err := rds.Client.Set(rds.Context, key, value, expiration).Err(); err != nil {
 		log.Fatal(err)
-
 		return false
 	}
 	return true
@@ -107,6 +101,7 @@ func (rds RedisClient) Get(key string) string {
 	result, err := rds.Client.Get(rds.Context, key).Result()
 	if err != nil {
 		if err != redis.Nil {
+			log.Fatal(err)
 		}
 		return ""
 	}
@@ -180,4 +175,79 @@ func (rds RedisClient) Decrement(parameters ...interface{}) bool {
 		return false
 	}
 	return true
+}
+
+func (rds RedisClient) SAdd(key string, value interface{}, expiration time.Duration) bool {
+	if err := rds.Client.SAdd(rds.Context, key, value, expiration).Err(); err != nil {
+		log.Fatal(err)
+
+		return false
+	}
+	return true
+}
+
+func (rds RedisClient) RPush(key string, value interface{}) bool {
+	if err := rds.Client.RPush(rds.Context, key, value).Err(); err != nil {
+		log.Fatal(err)
+
+		return false
+	}
+	return true
+}
+
+func (rds RedisClient) Incr(key string) bool {
+	if err := rds.Client.Incr(rds.Context, key).Err(); err != nil {
+		log.Fatal(err)
+
+		return false
+	}
+	return true
+}
+
+func (rds RedisClient) HGet(key string, key2 string) string {
+	result, err := rds.Client.HGet(rds.Context, key, key2).Result()
+	if err != nil {
+		return ""
+	}
+	return result
+}
+
+func (rds RedisClient) HSet(key string, key2 string, val interface{}) bool {
+	if err := rds.Client.HSet(rds.Context, key, key2, val).Err(); err != nil {
+		return false
+	}
+	return true
+}
+
+func (rds RedisClient) HSetNX(key string, key2 string, val interface{}) bool {
+	if err := rds.Client.HSetNX(rds.Context, key, key2, val).Err(); err != nil {
+		return false
+	}
+	return true
+}
+
+func (rds RedisClient) HExists(key string, key2 string) bool {
+	_, err := rds.Client.HExists(rds.Context, key, key2).Result()
+	if err != nil {
+		if err != redis.Nil {
+		}
+		return false
+	}
+	return true
+}
+
+func (rds RedisClient) HIncrBy(key string, key2 string, val int64) bool {
+	_, err := rds.Client.HIncrBy(rds.Context, key, key2, val).Result()
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+func (rds RedisClient) LRange(key string, start int, end int) interface{} {
+	result, err := rds.Client.LRange(rds.Context, key, int64(start), int64(end)).Result()
+	if err != nil {
+		return nil
+	}
+	return result
 }
