@@ -10,15 +10,14 @@ type Test struct {
 }
 
 func (this *Test) Insert() (id int, err error) {
-	var testModel Models.Test
+	var testModel Models.Config
 	testModel.Id = this.Id
-	testModel.Testcol = this.Testcol
 	id, err = testModel.Insert()
 	return
 }
 
-func Select() interface{} {
-	var testModel Models.Test
+func (this *Test) Select() []Models.Config {
+	var testModel Models.Config
 	// res := make(map[strings]interface{})
 	data := testModel.Select()
 	// value := reflect.ValueOf(data)

@@ -1,8 +1,8 @@
-package Mysql
+package Famey
 
 import (
 	"fmt"
-	u "gin/pkg/util"
+	u "gin/Pkg/util"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -16,11 +16,11 @@ func init() {
 		dbType, dbName, user, password, host string
 	)
 
-	dbType = u.GetEnv("DB_POTO_TYPE")
-	dbName = u.GetEnv("DB_POTO_NAME")
-	user = u.GetEnv("DB_POTO_USER")
-	password = u.GetEnv("DB_POTO_PASSWORD")
-	host = u.GetEnv("DB_POTO_HOST")
+	dbType = u.GetEnv("DB_FAMEY_TYPE")
+	dbName = u.GetEnv("DB_FAMEY_NAME")
+	user = u.GetEnv("DB_FAMEY_USER")
+	password = u.GetEnv("DB_FAMEY_PASSWORD")
+	host = u.GetEnv("DB_FAMEY_HOST")
 
 	DB, err = gorm.Open(dbType, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		user,

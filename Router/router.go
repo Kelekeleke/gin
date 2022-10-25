@@ -17,10 +17,19 @@ func InitRouter() *gin.Engine {
 
 	v1 := router.Group("v1")
 	{
-		v1.POST("/testinsert", Controllers.TestInsert)
-		v1.GET("/testSelect", Controllers.TestSelect)
+		v1.POST("/testinsert", new(Controllers.Test).TestInsert)
+		v1.GET("/testSelect", new(Controllers.Test).TestSelect)
 	}
 
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "111"})
+	})
+	router.GET("/go-famey", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "go-famey 111"})
+	})
+	router.GET("/go-famey/test", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "go-famey test 111"})
+	})
 	router.GET("/hello-world", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "hello test completed successfully"})
 	})

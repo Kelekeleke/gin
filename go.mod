@@ -11,6 +11,7 @@ require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-ini/ini v1.67.0 // indirect
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
+	github.com/gohouse/converter v0.0.3 // indirect
 	github.com/gomodule/redigo v1.8.9 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/jinzhu/gorm v1.9.16 // indirect

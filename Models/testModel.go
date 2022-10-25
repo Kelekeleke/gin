@@ -1,20 +1,20 @@
 package Models
 
 import (
-	"gin/Databases/Mysql"
+	Mysql "gin/Databases/Mysql/Famey"
 )
 
-type Test struct {
-	Id      int
-	Testcol string `gorm:"column:name"`
+type Config struct {
+	Id  int
+	Key string `gorm:"column:key"`
 }
 
 // 设置表名
-func (Test) TableName() string {
-	return "app"
+func (Config) TableName() string {
+	return "config"
 }
 
-func (this *Test) Insert() (id int, err error) {
+func (this *Config) Insert() (id int, err error) {
 	result := Mysql.DB.Create(&this)
 	id = this.Id
 	if result.Error != nil {
@@ -24,8 +24,8 @@ func (this *Test) Insert() (id int, err error) {
 	return
 }
 
-func (this *Test) Select() interface{} {
-	var testArr []Test
+func (this *Config) Select() []Config {
+	var testArr []Config
 	Mysql.DB.Find(&testArr)
 	return testArr
 }

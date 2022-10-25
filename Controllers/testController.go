@@ -1,14 +1,15 @@
 package Controllers
 
 import (
-	"gin/Databases/Redis"
 	"gin/Services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-func TestInsert(c *gin.Context) {
+type Test struct{}
+
+func (t *Test) TestInsert(c *gin.Context) {
 	var testService Services.Test
 
 	err := c.ShouldBindJSON(&testService)
@@ -33,13 +34,15 @@ func TestInsert(c *gin.Context) {
 
 }
 
-func TestSelect(c *gin.Context) {
-	data := Services.Select()
-	Redis.RedisCli.Set("poto_test_redis", 2, 20)
+func (t *Test) TestSelect(c *gin.Context) {
+
+	var test Services.Test
+	data := test.Select()
+	// Redis.RedisCli.Set("poto_test_redis", 2, 20)
 	c.JSON(http.StatusOK, gin.H{
-		"code":      1,
-		"msg":       "success2",
-		"data":      data,
-		"redisData": Redis.RedisCli.Get("poto_test_redis"),
+		"code": 1,
+		"msg":  "success2",
+		"data": data,
+		// "redisData": Redis.RedisCli.Get("poto_test_redis"),
 	})
 }

@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"time"
 
-	"gin/Databases/Mysql"
+	"gin/Databases/Mysql/Famey"
 	"gin/Router"
 	"gin/pkg/setting"
 
@@ -27,7 +27,7 @@ func inLambda() bool {
 // https://ibbv4y3f1j.execute-api.us-east-1.amazonaws.com/default/hello-world
 // 本地测试 停止 command/control + c
 func main() {
-	defer Mysql.DB.Close()
+	defer Famey.DB.Close()
 
 	if inLambda() {
 
