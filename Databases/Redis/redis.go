@@ -1,5 +1,5 @@
 // Package redis 工具包
-package Redis
+package redis
 
 import (
 	"context"

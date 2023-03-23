@@ -10,9 +10,9 @@ import (
 	"syscall"
 	"time"
 
-	"gin/Databases/Mysql/Famey"
-	"gin/Router"
+	"gin/databases/mysql/famey"
 	"gin/pkg/setting"
+	"gin/router"
 
 	"github.com/apex/gateway"
 )
@@ -27,19 +27,19 @@ func inLambda() bool {
 // https://ibbv4y3f1j.execute-api.us-east-1.amazonaws.com/default/hello-world
 // 本地测试 停止 command/control + c
 func main() {
-	defer Famey.DB.Close()
+	defer famey.DB.Close()
 
 	if inLambda() {
 
 		fmt.Println("running aws lambda in aws")
 		// fmt.Println(os.Getenv("AWS_REGION"))
-		log.Fatal(gateway.ListenAndServe(":8080", Router.InitRouter()))
+		log.Fatal(gateway.ListenAndServe(":8080", router.InitRouter()))
 
 	} else {
 
 		srv := &http.Server{
 			Addr:           fmt.Sprintf(":%d", setting.HTTPPort),
-			Handler:        Router.InitRouter(),
+			Handler:        router.InitRouter(),
 			ReadTimeout:    setting.ReadTimeout,
 			WriteTimeout:   setting.WriteTimeout,
 			MaxHeaderBytes: 1 << 20,

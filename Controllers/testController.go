@@ -1,7 +1,7 @@
-package Controllers
+package controllers
 
 import (
-	"gin/Services"
+	Services "gin/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

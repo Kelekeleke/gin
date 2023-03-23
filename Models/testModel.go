@@ -1,7 +1,7 @@
-package Models
+package models
 
 import (
-	Mysql "gin/Databases/Mysql/Famey"
+	Mysql "gin/databases/mysql/famey"
 )
 
 type Config struct {

@@ -1,8 +1,8 @@
-package Famey
+package famey
 
 import (
 	"fmt"
-	u "gin/Pkg/util"
+	u "gin/pkg/util"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
